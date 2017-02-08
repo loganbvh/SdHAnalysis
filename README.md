@@ -4,12 +4,12 @@ ___________________________________________
 -----------------------
 SdHAnalysis is a collection of Python functions for analyzing Shubnikov-de Haas oscillations measured in pulsed and dc magnetic fields. A dictionary is created for each field sweep/pulse, and this dictionary contains the original data and any additional data created throughout the analysis. Currently, it is assumed that the resistivity is measured using a tunnel diode oscillator (i.e. SdH manifests as oscillations in frequency as a function of inverse field).
 ##### Data processing steps:
-1) Import data, clean it if necessary, and wrap it in a dict.
-2) Invert the magnetic field, spline fit to get evenly spaced points, and subtract a polynomial (in inverse field) magnetoresistance background signal.
-3) Identify peaks in the FFT corresponding to SdH and magnetic breakdown orbits, and any mixing signals or harmonics.
-4) Filter the oscillatory magnetoresistance signal to isolate each of the orbits of interest.
-5) Calculate the amplitude of magnetoresistance oscillations as a function of inverse field.
-6) Fit the data to theoretical models to extract materials parameters like effective mass, g-factor, Dingle temperature, and magnetic breakdown field.
+1. Import data, clean it if necessary, and wrap it in a dict.
+2. Invert the magnetic field, spline fit to get evenly spaced points, and subtract a polynomial (in inverse field) magnetoresistance background signal.
+3. Identify peaks in the FFT corresponding to SdH and magnetic breakdown orbits, and any mixing signals or harmonics.
+4. Filter the oscillatory magnetoresistance signal to isolate each of the orbits of interest.
+5. Calculate the amplitude of magnetoresistance oscillations as a function of inverse field.
+6. Fit the data to theoretical models to extract materials parameters like effective mass, g-factor, Dingle temperature, and magnetic breakdown field.
 
 SdH oscillations at many temperatures are needed to calculate effective mass (using fits to the Lifshitz–Kosevich formula). I hope to implement this calculation soon.
 
