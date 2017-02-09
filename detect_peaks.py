@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
 
-"""A few tweaks by Logan Bishop-Van Horn (2017)"""
+"""Updated by Logan Bishop-Van Horn (2017)"""
 """Detect peaks in data based on their amplitude and other features."""
 
 __author__ = "Marcos Duarte, https://github.com/demotu/BMC"

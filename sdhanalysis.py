@@ -1,13 +1,14 @@
 import numpy as np
 import pandas as pd
+from numpy import fft
+
 from scipy import interpolate
 from scipy import optimize
 from scipy import signal
-from numpy import fft
+
 from detect_peaks import detect_peaks
 
 import matplotlib.pyplot as plt
-%matplotlib inline
 
 """ Data processing pipeline for analysis of SdH in pulsed fields.
     Logan Bishop-Van Horn (2017)
@@ -46,6 +47,7 @@ def sdh_load(year, num, plot=True):
         plt.xlabel('Field (T)')
         plt.ylabel('Frequency (MHz)')
         plt.legend(loc=0)
+        plt.show()
     return sdh_dict
 
 ###################################################################################################
@@ -94,13 +96,14 @@ def back_subtract(sdh_dict, deg, Bmin, Bmax, npnts=2**13, plot=True, yscale=1e5,
         plt.legend(loc=0)
         plt.xlabel(r'Inverse Field (T${}^{-1}$)')
         plt.ylabel(r'$\Delta$f (kHz)')
+        plt.show()
     if save:
         sdh_dict.update({'Upcs': pd.DataFrame({'Field': 1/Binv, 'InvField': Binv,
                                      'Freq': new_up, 'FreqSub': sub_up}),
                     'Downcs': pd.DataFrame({'Field': 1/Binv, 'InvField': Binv,
                                         'Freq': new_down, 'FreqSub': sub_down})})
         print('Dict updated.\nKeys:',sdh_dict.keys())
-        return sdh_dict
+    return sdh_dict
     
 ###################################################################################################
 #                                                                                                 #
@@ -119,6 +122,8 @@ def get_fft_peaks(sdh_dict, direc='Down', nskip=500, mph=None, mpd=1,
         nignore: Throw out peak if index < nignore
         xmax: x-axis maximum for plotting
         keep_ind: List of indices in the array of peak locations to keep
+            e.g. if you want to keep 1st, 3rd, 4th, and 7th peaks:
+                keep_ind = [0, 2, 3, 6]
             (inspect plot to decide which peak locations to keep)
         save: Once you've chosen the indices of the peak locations to keep, set save=True
             and run get_fft_peaks() again
@@ -133,12 +138,13 @@ def get_fft_peaks(sdh_dict, direc='Down', nskip=500, mph=None, mpd=1,
     df_peaks = pd.DataFrame({'Freq': [f[i] for i in peak_ind], 'Amp': [fftdata[i] for i in peak_ind],
                              'Ind': [i for i in peak_ind]})
     if save:
-        sdh_dict.update({'Peaks': df_peaks})
+        sdh_dict.update({'FFTPeaks': df_peaks, 'nskip': nskip})
         print('The following {} peaks have been added to the dict:'.format(len(df_peaks)))
         print(df_peaks,'\n')
         print('Keys:', sdh_dict.keys())
-        return sdh_dict
-    print(df_peaks)
+    else:
+        print(df_peaks)
+    return sdh_dict
     
 ###################################################################################################
 #                                                                                                 #
@@ -183,10 +189,10 @@ def isolate_orbit(sdh_dict, center_freq, passband, orbit, order=2, direc='Down',
         plt.legend(loc=0)
         plt.show()
     if save:
-        sdh_dict.update({orbit: freq_filt})
+        sdh_dict.update({orbit: {'Freq': freq_filt}})
         print('Filtered '+orbit+' orbit has been added to the dict.')
-        print(sdh_dict.keys())
-        return sdh_dict
+        print('Keys: ', sdh_dict.keys())
+    return sdh_dict
 
 ###################################################################################################
 #                                                                                                 #
@@ -210,14 +216,14 @@ def get_peak_amplitudes(sdh_dict, orbit, direc='Down', show=True, save=False):
     peak_amps = np.array([peaks[i] for i in peak_ind])
     if save:
         print('Peak amplitudes of '+orbit+' orbit have been added to the dict.')
-        print(sdh_dict.keys())
+        print('Keys: ', sdh_dict.keys())
         df_peaks = pd.DataFrame({'Amp': peak_amps, 'InvField': peak_fields})
         sdh_dict[orbit].update({'Peaks': df_peaks})
         plt.plot(peak_fields, 1e-3*peak_amps, 'o')
         plt.xlabel(r'Inverse Field (T${}^{-1}$)')
         plt.ylabel(r'Amplitude (kHz)')
         plt.show()
-        return sdh_dict
+    return sdh_dict
 
 ###################################################################################################
 #                                                                                                 #
