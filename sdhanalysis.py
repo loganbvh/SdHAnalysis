@@ -187,6 +187,7 @@ def isolate_orbit(sdh_dict, center_freq, passband, orbit, order=2, direc='Down',
         plt.xlabel(r'Inverse Field (T${}^{-1}$)')
         plt.ylabel(r'$\Delta$f (kHz)')
         plt.legend(loc=0)
+        plt.title(orbit+' orbit')
         plt.show()
     if save:
         sdh_dict.update({orbit: {'Freq': freq_filt}})
@@ -222,6 +223,7 @@ def get_peak_amplitudes(sdh_dict, orbit, direc='Down', show=True, save=False):
         plt.plot(peak_fields, 1e-3*peak_amps, 'o')
         plt.xlabel(r'Inverse Field (T${}^{-1}$)')
         plt.ylabel(r'Amplitude (kHz)')
+        plt.title(orbit+' orbit amplitudes')
         plt.show()
     return sdh_dict
 
