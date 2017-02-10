@@ -36,7 +36,7 @@ class SdHDataSet:
                 'Osc': (pandas DataFrame) oscillations vs. 1/B
                 'Peaks': (pandas DataFrame) oscillation amplitude vs. 1/B
     Methods:
-        load_data()
+        load_data() (Adapt this method for your particular dataset)
         subtract_background()
         get_fft_peaks()
         isolate_orbit()
