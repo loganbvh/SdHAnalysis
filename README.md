@@ -2,7 +2,7 @@
 ___________________________________________
 #### Data processing pipeline for analysis of quantum oscillations.
 -----------------------
-SdHAnalysis is a collection of Python functions for analyzing Shubnikov-de Haas oscillations measured in pulsed and dc magnetic fields. SdHAnalysis is based on the SdHDataSet class, which contains the raw and processed data for a single magnet sweep/pulse and includes methods for analysis and plotting. Currently, it is assumed that the resistivity is measured using a tunnel diode oscillator (i.e. SdH manifests as oscillations in frequency as a function of inverse field).
+SdHAnalysis is a collection of Python functions for analyzing Shubnikov-de Haas oscillations measured in pulsed and dc magnetic fields. SdHAnalysis is based on the `SdHDataSet` class, which contains the raw and processed data for a single magnet sweep/pulse and includes methods for analysis and plotting. Currently, it is assumed that the resistivity is measured using a tunnel diode oscillator (i.e. SdH manifests as oscillations in frequency as a function of inverse field).
 ##### Data processing steps:
 1. Import data, clean it if necessary.
 2. Invert the magnetic field, spline fit to get evenly spaced points, and subtract a polynomial (in inverse field) magnetoresistance background signal.
