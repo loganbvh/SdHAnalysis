@@ -77,8 +77,8 @@ class SdHDataSet:
     def plot_orbit_amplitudes(self):
         orbits = self.Orbits
         for orbit in sorted(orbits.keys()):
-            plt.plot(orbits[orbit]['Peaks'].InvField, 1e-3*orbits[orbit]['Peaks'].Amp, lw=2, label=orbit)
-        plt.legend(loc=0)
+            plt.plot(orbits[orbit]['Peaks'].InvField, 1e-3*orbits[orbit]['Peaks'].Amp, '.', label=orbit)
+        plt.legend(loc=0, numpoints=1)
         plt.xlabel(r'Inverse Field (T${}^{-1}$)')
         plt.ylabel('Amplitude (kHz)')
         plt.xlim(orbits[list(orbits.keys())[0]]['Peaks'].InvField.min())
