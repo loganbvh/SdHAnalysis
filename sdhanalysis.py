@@ -54,7 +54,7 @@ class SdHDataSet:
         self.Upcs, self.Downcs = back_subtract(self.UpRaw, self.DownRaw, deg, Bmin, Bmax,
                                                npnts=npnts, plot=plot, yscale=yscale, save=save)
         
-    def get_fft_peaks(self, nskip=500, mph=None, mpd=1,
+    def get_fft_peaks(self, nskip=100, mph=None, mpd=1,
                   threshold=0, edge='rising', kpsh=False, valley=False,
                   show=True, ax=None, nignore=5, xmax=None, keep_ind=None, save=False):
         self.nskip = nskip
@@ -63,9 +63,9 @@ class SdHDataSet:
                                              valley=valley, show=show, ax=ax, nignore=nignore,
                                              xmax=xmax, keep_ind=keep_ind, save=save)
     
-    def isolate_orbit(self, orbit, center_freq, passband, order=2, plot=True, save=False):
+    def isolate_orbit(self, orbit, center_freq, passband, order=2, method='gust', plot=True, save=False):
         df_orbitdata = filter_orbit(self.Downcs, center_freq, passband, orbit,
-                                  self.nskip, order=order, plot=plot, save=save)
+                                  self.nskip, order=order, method=method, plot=plot, save=save)
         self.Orbits.update({orbit: {'Osc': df_orbitdata}})
         
     def get_peak_amplitudes(self, orbit, show=True, save=False):
@@ -226,12 +226,12 @@ def bandpass(lowcut, highcut, fs, order=2):
     b, a = signal.butter(order, [low, high], btype='band')
     return b, a
 
-def bandpass_filter(freq_data, lowcut, highcut, fs, order=2):
+def bandpass_filter(freq_data, lowcut, highcut, fs, order, method):
     b, a = bandpass(lowcut, highcut, fs, order=order)
-    freq_filt = signal.filtfilt(b, a, freq_data)
+    freq_filt = signal.filtfilt(b, a, freq_data, method=method)
     return freq_filt
 
-def filter_orbit(df_datacs, center_freq, passband, orbit, nskip, order, plot, save):
+def filter_orbit(df_datacs, center_freq, passband, orbit, nskip, order, method, plot, save):
     """ Bandpass filter to isolate a specific orbit/fundamental frequency.
     Inputs:
         df_datacs: DataFrame containing background subtracted data
@@ -249,7 +249,7 @@ def filter_orbit(df_datacs, center_freq, passband, orbit, nskip, order, plot, sa
     inv_field = df_datacs.InvField.values[nskip:]
     fs = 1/(inv_field[1]-inv_field[0])
     lowcut, highcut = center_freq-passband, center_freq+passband
-    freq_filt = bandpass_filter(freq_data, lowcut, highcut, fs, order=order)
+    freq_filt = bandpass_filter(freq_data, lowcut, highcut, fs, order=order, method=method)
     if plot:
         plt.plot(df_datacs.InvField[nskip:], 1e-3*df_datacs.FreqSub[nskip:], label='Raw')
         plt.plot(df_datacs.InvField[nskip:], 1e-3*freq_filt, 'r', label='{} T bandpass'.format(center_freq))
